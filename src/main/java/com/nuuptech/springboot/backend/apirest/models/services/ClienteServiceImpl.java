@@ -6,12 +6,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.nuuptech.springboot.backend.apirest.models.dao.IClienteDao;
 import com.nuuptech.springboot.backend.apirest.models.entity.Cliente;
+import com.nuuptech.springboot.backend.apirest.models.entity.Region;
 
 @Service
 public class ClienteServiceImpl implements IClienteService{
@@ -50,6 +50,13 @@ public class ClienteServiceImpl implements IClienteService{
 	@Transactional
 	public void delete(Long id){
 		clienteDao.deleteById(id);
+	}
+	
+	// Traer todas las regiones
+	@Override
+	@Transactional(readOnly = true)
+	public List<Region> findAllRegiones() {
+		return clienteDao.findAllRegiones();
 	}
 
 

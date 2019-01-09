@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.nuuptech.springboot.backend.apirest.models.entity.Cliente;
+import com.nuuptech.springboot.backend.apirest.models.entity.Region;
 import com.nuuptech.springboot.backend.apirest.models.services.IClienteService;
 import com.nuuptech.springboot.backend.apirest.models.services.IUploadFileService;
 
@@ -89,11 +90,10 @@ public class ClienteRestController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public ResponseEntity<?> create(@Valid @RequestBody Cliente cliente, BindingResult result){
 
-		Cliente clienteNew = null;
 		Map<String,Object> response = new HashMap<>();
 		
 		if(result.hasErrors()){
-			List<String> errors = new ArrayList();
+			List<String> errors = new ArrayList<String>();
 
 			for(FieldError err: result.getFieldErrors()){
 				errors.add("El campo '" + err.getField() + "' " + err.getDefaultMessage());
@@ -131,7 +131,7 @@ public class ClienteRestController {
 		}
 		
 		if(result.hasErrors()){
-			List<String> errors = new ArrayList();
+			List<String> errors = new ArrayList<String>();
 
 			for(FieldError err: result.getFieldErrors()){
 				errors.add("El campo '" + err.getField() + "' " + err.getDefaultMessage());
@@ -146,6 +146,7 @@ public class ClienteRestController {
 			clienteActual.setNombre(cliente.getNombre());
 			clienteActual.setEmail(cliente.getEmail());
 			clienteActual.setCreateAt(cliente.getCreateAt());
+			clienteActual.setRegion(cliente.getRegion());
 			
 			clienteUpdated = clienteService.save(clienteActual);
 		} catch(DataAccessException e) {
@@ -225,7 +226,11 @@ public class ClienteRestController {
 		return new ResponseEntity<Resource>(recurso,cabecera, HttpStatus.OK);
 	}
 	
-	
+	// Traer todas las regiones
+	@GetMapping("/clientes/regiones")
+	public List<Region> listarRegiones(){
+		return clienteService.findAllRegiones();
+	}
 	
 	
 	

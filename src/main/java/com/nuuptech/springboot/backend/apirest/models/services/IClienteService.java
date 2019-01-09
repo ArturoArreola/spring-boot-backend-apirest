@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.nuuptech.springboot.backend.apirest.models.entity.Cliente;
+import com.nuuptech.springboot.backend.apirest.models.entity.Region;
 
 public interface IClienteService {
 	
@@ -22,4 +23,7 @@ public interface IClienteService {
 	
 	// Borrar cliente
 	public void delete (Long id);
+	
+	// Traer todas las regiones 
+	public List<Region> findAllRegiones();
 }
