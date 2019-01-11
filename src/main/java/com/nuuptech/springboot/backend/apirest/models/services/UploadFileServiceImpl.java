@@ -17,19 +17,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service
 public class UploadFileServiceImpl implements IUploadFileService{
-
-	private final Logger log = LoggerFactory.getLogger(UploadFileServiceImpl.class);
-	private final static String DIRECTORIO_UPLOAD = "uploads";
 	
+	private final Logger log = LoggerFactory.getLogger(UploadFileServiceImpl.class);
+	
+	private final static String DIRECTORIO_UPLOAD = "uploads";
+
 	@Override
 	public Resource cargar(String nombreFoto) throws MalformedURLException {
 		
 		Path rutaArchivo = getPath(nombreFoto);
 		log.info(rutaArchivo.toString());
+		
 		Resource recurso = new UrlResource(rutaArchivo.toUri());
 		
 		if(!recurso.exists() && !recurso.isReadable()) {
-			throw new RuntimeException("Error, no se pudo cargar la imagen: " + nombreFoto);
+			rutaArchivo = Paths.get("src/main/resources/static/images").resolve("no-usuario.png").toAbsolutePath();
+			
+			recurso = new UrlResource(rutaArchivo.toUri());
+			
+			log.error("Error no se pudo cargar la imagen: " + nombreFoto);
+			
 		}
 		return recurso;
 	}
@@ -37,9 +44,11 @@ public class UploadFileServiceImpl implements IUploadFileService{
 	@Override
 	public String copiar(MultipartFile archivo) throws IOException {
 		
-		String nombreArchivo = UUID.randomUUID() + "-" + archivo.getOriginalFilename().replace(" ", "");
+		String nombreArchivo = UUID.randomUUID().toString() + "_" +  archivo.getOriginalFilename().replace(" ", "");
+		
 		Path rutaArchivo = getPath(nombreArchivo);
 		log.info(rutaArchivo.toString());
+		
 		Files.copy(archivo.getInputStream(), rutaArchivo);
 		
 		return nombreArchivo;
@@ -48,8 +57,7 @@ public class UploadFileServiceImpl implements IUploadFileService{
 	@Override
 	public boolean eliminar(String nombreFoto) {
 		
-		
-		if(nombreFoto != null && nombreFoto.length() > 0){
+		if(nombreFoto !=null && nombreFoto.length() >0) {
 			Path rutaFotoAnterior = Paths.get("uploads").resolve(nombreFoto).toAbsolutePath();
 			File archivoFotoAnterior = rutaFotoAnterior.toFile();
 			if(archivoFotoAnterior.exists() && archivoFotoAnterior.canRead()) {
@@ -57,6 +65,7 @@ public class UploadFileServiceImpl implements IUploadFileService{
 				return true;
 			}
 		}
+		
 		return false;
 	}
 

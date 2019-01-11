@@ -23,16 +23,15 @@ INSERT INTO clientes (region_id, nombre, apellido, email, create_at) VALUES (5, 
 
 /*Creando usuarios*/
 
-INSERT INTO usuarios (username, password, enabled) VALUES ('arturo', '$2a$04$qvBNuAEw7aTU3bFrl0jECeudtAbs5HXQzPo5lt81/6zkVAK2rcP86', 1);
-INSERT INTO usuarios (username, password, enabled) VALUES ('admin', '$2a$04$qvBNuAEw7aTU3bFrl0jECeudtAbs5HXQzPo5lt81/6zkVAK2rcP86', 1);
+INSERT INTO usuarios (username, password, enabled, nombre, apellido, email) VALUES ('admin', '$2a$04$qvBNuAEw7aTU3bFrl0jECeudtAbs5HXQzPo5lt81/6zkVAK2rcP86', 1, 'admin', 'paterno', 'dos@dos.com');
+INSERT INTO usuarios (username, password, enabled, nombre, apellido, email) VALUES ('arturo', '$2a$04$qvBNuAEw7aTU3bFrl0jECeudtAbs5HXQzPo5lt81/6zkVAK2rcP86', 1, 'arturo', 'arreola', 'uno@uno.com');
 
 /*Creando roles*/
 
-INSERT INTO roles (nombre) VALUES ('ROLE_USER');
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMIN');
+INSERT INTO roles (nombre) VALUES ('ROLE_USER');
 
 /* Creando relacion usuario-rol*/
 
 INSERT INTO usuarios_roles (usuario_id, role_id) VALUES (1,1);
 INSERT INTO usuarios_roles (usuario_id, role_id) VALUES (2,2);
-INSERT INTO usuarios_roles (usuario_id, role_id) VALUES (2,1);

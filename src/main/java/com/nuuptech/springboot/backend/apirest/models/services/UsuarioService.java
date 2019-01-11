@@ -19,31 +19,37 @@ import com.nuuptech.springboot.backend.apirest.models.dao.IUsuarioDao;
 import com.nuuptech.springboot.backend.apirest.models.entity.Usuario;
 
 @Service
-public class UsuarioService implements UserDetailsService{
-
-	private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+public class UsuarioService implements IUsuarioService, UserDetailsService{
 	
+	private Logger logger = LoggerFactory.getLogger(UsuarioService.class);
+
 	@Autowired
 	private IUsuarioDao usuarioDao;
 	
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 		Usuario usuario = usuarioDao.findByUsername(username);
 		
 		if(usuario == null) {
-			logger.error("Error: el usuario '" + username + "' no existe en la base de datos");
-			throw new UsernameNotFoundException("Error: el usuario '" + username + "' no existe en la base de datos");
+			logger.error("Error en el login: no existe el usuario '"+username+"' en el sistema!");
+			throw new UsernameNotFoundException("Error en el login: no existe el usuario '"+username+"' en el sistema!");
 		}
 		
-		List <GrantedAuthority> authorities = usuario.getRoles()
+		List<GrantedAuthority> authorities = usuario.getRoles()
 				.stream()
 				.map(role -> new SimpleGrantedAuthority(role.getNombre()))
 				.peek(authority -> logger.info("Role: " + authority.getAuthority()))
 				.collect(Collectors.toList());
 		
 		return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true, true, true, authorities);
+	}
+
+	@Override
+	@Transactional(readOnly=true)
+	public Usuario findByUsername(String username) {
+		return usuarioDao.findByUsername(username);
 	}
 
 }
